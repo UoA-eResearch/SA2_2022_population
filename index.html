@@ -46,6 +46,38 @@
             font-weight: normal;
             font-size: 1rem;
         }
+
+        .legend h1 {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 0;
+        }
+
+        .legend {
+            background-color: rgba(0,0,0,0.8);
+            color: white;
+            padding: 20px;
+        }
+
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+            clear: left;
+        }
+
+        .legend i.circle {
+            border-radius: 50%;
+        }
+
+        .legend-source {
+            margin-top: 15px;
+            color: #999;
+            clear: both;
+            float: right;
+        }
     </style>
 </head>
 
@@ -74,7 +106,20 @@
 
                 var maxPop = Math.max(...csvData.map(r => r["2022"]).filter(r => r))
                 console.log("Maximum population by SA2:", maxPop)
-                var cmap = chroma.scale('Spectral').domain([0, maxPop])
+                var cmap = chroma.scale('Spectral').domain([maxPop, 0])
+
+                var legend = L.control({position: 'bottomright'});
+                legend.onAdd = function (map) {
+                    var div = L.DomUtil.create('div', 'info legend');
+                    div.innerHTML += "<h1>Legend</h1>"
+                    for (var i = 0; i < maxPop; i += maxPop / 5) {
+                        div.innerHTML += `<i style="background: ${cmap(i)}"></i> ${Math.round(i)}<br>`;
+                    }
+                    div.innerHTML += '<div class="legend-source">Source: <a href="https://nzdotstat.stats.govt.nz/wbos/Index.aspx?DataSetCode=TABLECODE7979#">Stats NZ</a></div>'
+                    return div;
+                };
+
+                legend.addTo(map);
 
                 var population_lookup = {}
                 for (var row of csvData) {
