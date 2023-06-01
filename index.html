@@ -93,7 +93,7 @@
                     L.geoJSON(geojson, {
                         onEachFeature: function (feature, layer) {
                             var p = feature.properties;
-                            layer.bindTooltip(`${p.SA22022__1}: ${p.population["2022"]} people in 2022`)
+                            layer.bindTooltip(`${p.SA22022__1}: ${p.population["2022"]} people in 2022`, {sticky: true})
                         },
                         style: function (feature) {
                             return {
